@@ -1,6 +1,9 @@
 package iteration
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestRepeat(t *testing.T) {
 	repeated := Repeat("a", 7)
@@ -9,6 +12,12 @@ func TestRepeat(t *testing.T) {
 	if repeated != expected {
 		t.Errorf("expected %q but got %q", expected, repeated)
 	}
+}
+
+func ExampleRepeat() {
+	result := Repeat("a", 7)
+	fmt.Println(result)
+	// Output: aaaaaaa
 }
 
 func BenchmarkRepeat(b *testing.B) {
