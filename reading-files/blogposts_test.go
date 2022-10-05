@@ -4,6 +4,7 @@ import (
 	"blogposts"
 	"errors"
 	"io/fs"
+	"reflect"
 	"testing"
 	"testing/fstest"
 )
@@ -19,8 +20,8 @@ func TestNewBlogPosts(t *testing.T) {
 
 	t.Run("simple count of the number of files in folder", func(t *testing.T) {
 		fs := fstest.MapFS{
-			"hello world.md":  {Data: []byte("hi")},
-			"hello-world2.md": {Data: []byte("hola")},
+			"hello world.md":  {Data: []byte("Title: hi")},
+			"hello-world2.md": {Data: []byte("Title: hola")},
 		}
 
 		posts, err := blogposts.NewPostsFromFS(fs)
@@ -46,7 +47,21 @@ func TestNewBlogPosts(t *testing.T) {
 	})
 
 	t.Run("verify title is the same", func(t *testing.T) {
+		fs := fstest.MapFS{
+			"hello world.md":  {Data: []byte("Title: Post 1")},
+			"hello-world2.md": {Data: []byte("Title: Post 2")},
+		}
+		posts, err := blogposts.NewPostsFromFS(fs)
+		if err != nil {
+			t.Fatal(err)
+		}
 
+		got := posts[0]
+		want := blogposts.Post{Title: "Post 1"}
+
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %+v, want %+v", got, want)
+		}
 	})
 
 }
