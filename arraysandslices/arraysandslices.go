@@ -1,5 +1,15 @@
 package arraysandslices
 
+type Transaction struct {
+	From string
+	To   string
+	Sum  float64
+}
+
+func BalanceFor(transactions []Transaction, name string) float64 {
+	return 0.0
+}
+
 // Sum calculates the total from a slice of numbers.
 func Sum(numbers []int) int {
 	add := func(acc, x int) int { return acc + x }
