@@ -5,6 +5,18 @@ import (
 	"testing"
 )
 
+func TestFind(t *testing.T) {
+	t.Run("find first even number", func(t *testing.T) {
+		numbers := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+
+		firstEvenNumber, found := Find(numbers, func(x int) bool {
+			return x%2 == 0
+		})
+		AssertTrue(t, found)
+		AssertEqual(t, firstEvenNumber, 2)
+	})
+}
+
 func TestBadBank(t *testing.T) {
 
 	t.Run("check balance is equal simple", func(t *testing.T) {
@@ -136,5 +148,19 @@ func AssertNotEqual[T comparable](t *testing.T, got, want T) {
 	t.Helper()
 	if got == want {
 		t.Errorf("didn't want %v", got)
+	}
+}
+
+func AssertTrue(t *testing.T, got bool) {
+	t.Helper()
+	if !got {
+		t.Errorf("got %v, want true", got)
+	}
+}
+
+func AssertFalse(t *testing.T, got bool) {
+	t.Helper()
+	if got {
+		t.Errorf("got %v, want false", got)
 	}
 }
