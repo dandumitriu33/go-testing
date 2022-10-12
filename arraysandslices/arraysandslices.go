@@ -7,7 +7,16 @@ type Transaction struct {
 }
 
 func BalanceFor(transactions []Transaction, name string) float64 {
-	return 0.0
+	var balance float64
+	for _, t := range transactions {
+		if t.From == name {
+			balance -= t.Sum
+		}
+		if t.To == name {
+			balance += t.Sum
+		}
+	}
+	return balance
 }
 
 // Sum calculates the total from a slice of numbers.
