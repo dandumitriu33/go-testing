@@ -11,7 +11,7 @@ func TestFileSystemStore(t *testing.T) {
 			{"Name": "Cleo", "Wins": 10},
 			{"Name": "Chris", "Wins": 33}]`)
 
-		store := FileSystemPlayerStore(database)
+		store := FileSystemPlayerStore{database}
 
 		got := store.GetLeague()
 

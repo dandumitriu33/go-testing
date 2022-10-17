@@ -1,3 +1,11 @@
 package main
 
-type FileSystemPlayerStore struct{}
+import "io"
+
+type FileSystemPlayerStore struct {
+	database io.Reader
+}
+
+func (f *FileSystemPlayerStore) GetLeague() []Player {
+	return nil
+}
