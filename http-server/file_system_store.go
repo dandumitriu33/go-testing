@@ -2,50 +2,42 @@ package main
 
 import (
 	"encoding/json"
-	"io"
+	"os"
 )
 
 type FileSystemPlayerStore struct {
-	database io.ReadWriteSeeker
+	database *json.Encoder
+	league   League
+}
+
+func NewFileSystemPlayerStore(file *os.File) *FileSystemPlayerStore {
+	file.Seek(0, 0)
+	league, _ := NewLeague(file)
+	return &FileSystemPlayerStore{
+		database: json.NewEncoder(&tape{file}),
+		league:   league,
+	}
 }
 
 func (f *FileSystemPlayerStore) GetLeague() League {
-	// var league []Player
-	// json.NewDecoder(f.database).Decode(&league)
-	f.database.Seek(0, 0)
-	league, _ := NewLeague(f.database)
-	return league
+	return f.league
 }
 
 func (f *FileSystemPlayerStore) GetPlayerScore(name string) int {
-	player := f.GetLeague().Find(name)
+	player := f.league.Find(name)
 	if player != nil {
 		return player.Wins
 	}
 	return 0
-
-	// var wins int
-	// for _, player := range f.GetLeague() {
-	// 	if player.Name == name {
-	// 		wins = player.Wins
-	// 		break
-	// 	}
-	// }
-	// return wins
 }
 
 func (f *FileSystemPlayerStore) RecordWin(name string) {
-	league := f.GetLeague()
-	player := league.Find(name)
+	player := f.league.Find(name)
 	if player != nil {
 		player.Wins++
+	} else {
+		f.league = append(f.league, Player{name, 1})
 	}
-	// for i, player := range league {
-	// 	if player.Name == name {
-	// 		league[i].Wins++
-	// 	}
-	// }
 
-	f.database.Seek(0, 0)
-	json.NewEncoder(f.database).Encode(league)
+	f.database.Encode(f.league)
 }
